@@ -52,7 +52,11 @@ var app = new Vue({
                         this.output = response.data.result;
                         let pre = document.createElement("pre");
                         pre.className = "pre";
-                        pre.innerHTML = this.output;
+                        if(url=="shell"){
+                            pre.innerHTML = JSON.parse(this.output);
+                        }else{
+                            pre.innerHTML = this.output;
+                        }
                         // 当前cell后面有节点 且 节点为PRE
                         if (this.currentNode.nextSibling && this.currentNode.nextSibling.nodeName==="PRE") {
                             let oldpre = this.currentNode.nextSibling;
@@ -77,6 +81,7 @@ var app = new Vue({
                 let inputAdjust = "<div id='div001' >"+this.input+"</div>"
                 var newDoc=parser.parseFromString(inputAdjust, "text/xml");
                 center.replaceChild(newDoc.getElementById("div001"),this.currentNode);
+                document.getElementById("div001").removeAttribute("id");
             // js、shell处理
             }else{
                 this.runCommon(this.selectValue);
