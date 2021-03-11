@@ -43,7 +43,7 @@ var app = new Vue({
             center.removeChild(center.lastChild);
         },
         runCommon(url){
-            axios.post(`http://127.0.0.1:3000/api/${url}/`, { key: JSON.stringify(this.input) })
+            axios.post(`/api/${url}/`, { key: JSON.stringify(this.input) })
                 .then((response) => {
                     if (response.data.error == "error") {
                         console.log("bakend error");
@@ -53,15 +53,14 @@ var app = new Vue({
                         let pre = document.createElement("pre");
                         pre.className = "pre";
                         pre.innerHTML = this.output;
-                        // 当前cell下方没有pre时
-                        if (this.currentNode.nextSibling.nodeName!="PRE") {
-                            // 当前节点的下方插入pre
-                            this.insterAfter(pre,this.currentNode);
-                            this.addCell();
-                            // 当前cell下方有pre时
-                        } else {
+                        // 当前cell后面有节点 且 节点为PRE
+                        if (this.currentNode.nextSibling && this.currentNode.nextSibling.nodeName==="PRE") {
                             let oldpre = this.currentNode.nextSibling;
                             center.replaceChild(pre, oldpre);
+                        // 当前cell后面无节点
+                        } else {
+                            this.insterAfter(pre,this.currentNode);
+                            this.addCell();
                         }
                     }
                 },
