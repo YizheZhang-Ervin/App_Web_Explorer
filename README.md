@@ -4,6 +4,7 @@ Jupyter-like Notebook made by NodeJS
 ## Features  
 - Run JS on web  
 - Run shell on web  
+- Run HTML on web  
   
 ## Technologies  
 - Frontend: Vue + ElementUI + Axios 

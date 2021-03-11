@@ -13,18 +13,21 @@
     <body>
         <section id="app">
             <!-- menu -->
-            <el-menu :default-active="menuOpen" mode="horizontal" @select="handleSelect"
-            background-color="#fff" text-color="darkgray" active-text-color="lightslategrey">
-            <el-menu-item index="1">NodeBook</el-menu-item>
-            <el-menu-item index="run" @click="runJS">Run Cell(NodeJS)</el-menu-item>
-            <el-menu-item index="run2" @click="runShell">Run Cell(Shell)</el-menu-item>
-            <el-menu-item index="add" @click="addCell">Add New Cell</el-menu-item>
-            <el-menu-item index="del" @click="delCell">Del Cell</el-menu-item>
+            <el-menu :default-active="menuOpen" mode="horizontal" @select="handleSelect" background-color="#fff"
+                text-color="darkgray" active-text-color="lightslategrey" style="display: flex;align-items: center;">
+                <el-menu-item index="1">NodeBook</el-menu-item>
+                <el-menu-item index="run" @click="runCell">Run Cell</el-menu-item>
+                <el-menu-item index="add" @click="addCell">Add New Cell</el-menu-item>
+                <el-menu-item index="del" @click="delCell">Del Cell</el-menu-item>
+                <el-select v-model="selectValue">
+                    <template slot="prefix">命令类型</template>
+                    <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
             </el-menu>
             <!-- main -->
             <main class="main">
                 <section id="center">
-                    <br />
                 </section>
             </main>
         </section>
