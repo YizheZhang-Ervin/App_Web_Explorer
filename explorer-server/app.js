@@ -58,6 +58,9 @@ app.use(`/${virtualStaticUrl}`, express.static(folderPath));
 // verify token
 let verifyToken = (req) => {
     const token = req.get('Authorization')
+    if (!token) {
+        return false
+    }
     let tokenStr = atob(token)
     if (tokenStr) {
         let tokenList = tokenStr.split("#")

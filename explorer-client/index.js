@@ -176,6 +176,8 @@ const app = createApp({
             this.currentUser = undefined
             this.showLogin = true
             this.canRequest = false
+            this.token = undefined
+            axiosInstance.defaults.headers.common['Authorization'] = undefined;
         },
         // 判断是否已登录
         judgeLogin() {
