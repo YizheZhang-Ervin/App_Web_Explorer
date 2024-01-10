@@ -16,11 +16,7 @@ const app = createApp({
             currentUser: undefined,
             showLogin: true,
             canRequest: false,
-            allowUserMap: {
-                "Alice": "123456",
-                "Bob": "123456",
-                "Cindy": "123456"
-            }
+            token: undefined
         }
     },
     mounted() {
@@ -153,16 +149,25 @@ const app = createApp({
         // 登录
         login() {
             // console.log(this.username, this.pwd)
-            let testPwd = this.allowUserMap[this.username]
-            if (testPwd && testPwd === this.pwd) {
-                // TODO: 登录成功,存入localstorage
-                // 表头显示用户名+logout按钮
-                this.currentUser = this.username
-                this.showLogin = false
-                this.canRequest = true
-            } else {
-                this.generateMsg("登陆失败，账号或密码错误")
-            }
+            axiosInstance.post(`/login`, { "username": this.username, "pwd": this.pwd })
+                .then((res) => {
+                    // 返回结果
+                    // console.log(res);
+                    if (res.status === 200) {
+                        // 返回结果
+                        this.currentUser = this.username
+                        this.showLogin = false
+                        this.canRequest = true
+                        this.token = res.data
+                        axiosInstance.defaults.headers.common['Authorization'] = this.token;
+                    } else {
+                        // 返回消息弹窗
+                        this.generateMsg("登陆失败，账号或密码错误")
+                    }
+                }).catch((err) => {
+                    // 返回消息弹窗
+                    this.generateMsg(err)
+                })
         },
         // 登出
         logout() {

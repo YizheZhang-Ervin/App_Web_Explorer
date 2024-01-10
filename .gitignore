@@ -107,3 +107,4 @@ dist
 
 explorer-server/config-test.json
 explorer-server/config-prod.json
+explorer-server/user.json

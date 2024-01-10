@@ -2,6 +2,7 @@ let express = require('express');
 let app = express();
 const bodyParser = require('body-parser')
 const multer = require('multer')
+const { exec } = require("child_process");
 let fs = require('fs');
 let path = require("path")
 let config = require("./config-test.json")
@@ -54,8 +55,30 @@ app.get("/", (req, res) => {
 // static folder
 app.use(`/${virtualStaticUrl}`, express.static(folderPath));
 
+// verify token
+let verifyToken = (req) => {
+    const token = req.get('Authorization')
+    let tokenStr = atob(token)
+    if (tokenStr) {
+        let tokenList = tokenStr.split("#")
+        let userJson = require("./user.json")
+        let testPwd = userJson[tokenList[0]]
+        if (testPwd && testPwd === tokenList[1]) {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
 // API: basic route
 app.get('/file', (req, res) => {
+    // 验证请求头
+    if (!verifyToken(req)) {
+        res.status(500)
+        res.send(`ERR,验证身份失败`)
+        return
+    }
     let filesList = { content: "" }
     readFileList(folderPath, filesList)
     res.send(filesList.content)
@@ -109,6 +132,12 @@ let assembleFilePath = (nowMiddlePath, path) => {
 
 // API: upload api
 app.post("/upload", upload.single("file"), (req, res) => {
+    // 验证请求头
+    if (!verifyToken(req)) {
+        res.status(500)
+        res.send(`ERR,验证身份失败`)
+        return
+    }
     const uploadedFile = req.file
     if (uploadedFile) {
         res.status(200)
@@ -121,6 +150,12 @@ app.post("/upload", upload.single("file"), (req, res) => {
 
 // API: global search api
 app.get("/gsearch", (req, res) => {
+    // 验证请求头
+    if (!verifyToken(req)) {
+        res.status(500)
+        res.send(`ERR,验证身份失败`)
+        return
+    }
     let keyword = req.query.keyword
     // console.log(keyword)
     res.status(200)
@@ -129,10 +164,41 @@ app.get("/gsearch", (req, res) => {
 
 // API: cmd api
 app.post("/run", (req, res) => {
-    let commands = JSON.parse(req.body["commands"])
-    console.log(commands)
-    res.status(200)
-    res.send(`OK,${commands}`)
+    // 验证请求头
+    if (!verifyToken(req)) {
+        res.status(500)
+        res.send(`ERR,验证身份失败`)
+        return
+    }
+    let commands = req.body["commands"]
+    // console.log(commands)
+    exec(commands, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`执行错误: ${error}`);
+            res.status(500)
+            res.send(`ERR,${error},${stderr}`)
+        } else {
+            res.status(200)
+            res.send(`${stdout}`)
+        }
+    });
+})
+
+// API: login
+app.post("/login", (req, res) => {
+    let username = req.body["username"]
+    let pwd = req.body["pwd"]
+    let userJson = require("./user.json")
+    let testPwd = userJson[username]
+    if (testPwd && testPwd === pwd) {
+        // 组装token
+        let token = btoa(username + "#" + pwd)
+        res.status(200)
+        res.send(token)
+    } else {
+        res.status(500)
+        res.send("Login Failed")
+    }
 })
 
 // web server

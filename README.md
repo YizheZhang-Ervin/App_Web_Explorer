@@ -6,6 +6,7 @@
 GET /file
 
 # 登录登出
+POST /login
 
 # 全局搜
 GET /gsearch
@@ -15,4 +16,10 @@ POST /upload
 
 # 命令行运行
 POST /run
+```
+
+## Config Files
+```
+user-template.json
+config-template.json
 ```
