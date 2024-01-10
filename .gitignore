@@ -104,3 +104,6 @@ dist
 .tern-port
 
 .vscode
+
+explorer-server/config-test.json
+explorer-server/config-prod.json

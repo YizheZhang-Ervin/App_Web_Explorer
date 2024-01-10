@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+}
+
+.whole {
+    background-image: url("./imgs/bg.jpg");
+    background-size: cover;
+}
+
+.h5v {
+    height: 6vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+.h90 {
+    height: 88vh;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.mg-auto {
+    margin: auto;
+}
+
+.transparent-bg {
+    background-color: transparent !important;
+}
+
+.font-gold {
+    color: gold !important;
+}
+
+.font-black {
+    color: black !important;
+}
+
+.border-none {
+    border: none;
+}
+
+.scroll-h50 {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}

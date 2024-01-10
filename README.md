@@ -1,27 +1,18 @@
-# Nodebook
-
-Jupyter-like Notebook made by NodeJS
+# App_Web_Explorer
 
 ## Features
+```
+# 网页文件浏览器
+GET /file
 
-- Run JS on web
-- Run shell on web
-- Run HTML on web
+# 登录登出
 
-## Technologies
+# 全局搜
+GET /gsearch
 
-- Frontend: Vue + ElementUI + Axios
-- Backend: Express + mysql + http + vm + child_process
+# 上传
+POST /upload
 
-## Install
-
-- npm install express
-- npm install cors
-- npm install ejs
-- npm install cookie-parser
-
-## Run
-
-- git clone xxLink
-- npm install
-- npm start xxPort
+# 命令行运行
+POST /run
+```
