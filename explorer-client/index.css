@@ -26,7 +26,12 @@
     margin: auto;
 }
 
-.transparent-bg {
+.resultColor {
+    background-color: rgb(9, 63, 22) !important;
+    color: rgb(94, 255, 0) !important;
+}
+
+.transparent-bg-search {
     background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
