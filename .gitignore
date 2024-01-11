@@ -105,6 +105,6 @@ dist
 
 .vscode
 
-explorer-server/config-test.json
-explorer-server/config-prod.json
-explorer-server/user.json
+explorer-server/config/config-test.json
+explorer-server/config/config-prod.json
+explorer-server/config/user.json

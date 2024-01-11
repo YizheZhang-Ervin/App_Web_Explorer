@@ -5,10 +5,20 @@ const multer = require('multer')
 const { exec } = require("child_process");
 let fs = require('fs');
 let path = require("path")
-let config = require("./config-test.json")
-// let config = require("./config-prod.json")
+let config = require("./config/config-test.json")
+// let config = require("./config/config-prod.json")
 
-// 响应处理
+// read config
+let folderPath = config["folderPath"]
+let port = config["port"] || 3000
+let address = config["address"] || "0.0.0.0"
+let virtualStaticUrl = config["virtualStaticUrl"] || "static"
+let splitor = config["splitor"] || "/"
+let uploadPath = config["uploadPath"] || "uploads/"
+let urlSplitor = "/"
+let userJsonPath = "./config/user.json"
+
+// response
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -20,16 +30,7 @@ app.use((req, res, next) => {
     next()
 });
 
-// read config
-let folderPath = config["folderPath"]
-let port = config["port"] || 3000
-let address = config["address"] || "0.0.0.0"
-let virtualStaticUrl = config["virtualStaticUrl"] || "static"
-let splitor = config["splitor"] || "/"
-let uploadPath = config["uploadPath"] || "uploads/"
-let urlSplitor = "/"
-
-// 创建存储路径及设置上传目录
+// file upload
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadPath) // 指定保存到uploads文件夹下
@@ -38,16 +39,15 @@ const storage = multer.diskStorage({
         cb(null, file.originalname)
     }
 })
-// 初始化Multer对象
 const upload = multer({ storage });
 
-// 视图
+// frontend view
 app.engine("html", require("ejs").__express);
 app.set('view engine', 'html'); // 指定使用EJS作为模板引擎
 app.set('views', path.join(__dirname, '../explorer-client'))
 app.use(express.static(path.join(__dirname, '../explorer-client')));
 
-// 主页
+// main page
 app.get("/", (req, res) => {
     res.render('index');
 })
@@ -55,7 +55,7 @@ app.get("/", (req, res) => {
 // static folder
 app.use(`/${virtualStaticUrl}`, express.static(folderPath));
 
-// verify token
+// TOOL: verify token
 let verifyToken = (req) => {
     const token = req.get('Authorization')
     if (!token) {
@@ -64,7 +64,7 @@ let verifyToken = (req) => {
     let tokenStr = atob(token)
     if (tokenStr) {
         let tokenList = tokenStr.split("#")
-        let userJson = require("./user.json")
+        let userJson = require(userJsonPath)
         let testPwd = userJson[tokenList[0]]
         if (testPwd && testPwd === tokenList[1]) {
             return true
@@ -74,20 +74,7 @@ let verifyToken = (req) => {
     }
 }
 
-// API: basic route
-app.get('/file', (req, res) => {
-    // 验证请求头
-    if (!verifyToken(req)) {
-        res.status(500)
-        res.send(`ERR,验证身份失败`)
-        return
-    }
-    let filesList = { content: "" }
-    readFileList(folderPath, filesList)
-    res.send(filesList.content)
-})
-
-// read folder files
+// TOOL: read folder files
 let readFileList = (path, filesList) => {
     var files = fs.readdirSync(path);
     files.forEach((itm, index) => {
@@ -106,7 +93,7 @@ let readFileList = (path, filesList) => {
     })
 }
 
-// assemble file path
+// TOOL: assemble file path
 let assembleFilePath = (nowMiddlePath, path) => {
     // 找当前path中最后一个splitor的位置idxPathSplit
     let idxPathSplit = path.lastIndexOf(splitor)
@@ -132,6 +119,19 @@ let assembleFilePath = (nowMiddlePath, path) => {
         return nowMiddlePath
     }
 }
+
+// API: basic route
+app.get('/file', (req, res) => {
+    // 验证请求头
+    if (!verifyToken(req)) {
+        res.status(500)
+        res.send(`ERR,验证身份失败`)
+        return
+    }
+    let filesList = { content: "" }
+    readFileList(folderPath, filesList)
+    res.send(filesList.content)
+})
 
 // API: upload api
 app.post("/upload", upload.single("file"), (req, res) => {
@@ -191,7 +191,7 @@ app.post("/run", (req, res) => {
 app.post("/login", (req, res) => {
     let username = req.body["username"]
     let pwd = req.body["pwd"]
-    let userJson = require("./user.json")
+    let userJson = require(userJsonPath)
     let testPwd = userJson[username]
     if (testPwd && testPwd === pwd) {
         // 组装token
