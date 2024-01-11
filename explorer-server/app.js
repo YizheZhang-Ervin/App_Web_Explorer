@@ -84,9 +84,12 @@ let readFileList = (path, filesList, target = null) => {
             readFileList(path + itm + splitor, filesList, target)
         } else {
             if (target == null || itm.includes(target)) {
+                let appendMiddlePath = "/"
                 // 组装文件路径
-                let judgePath = path.substring(0, path.length - splitor.length)
-                let appendMiddlePath = assembleFilePath(urlSplitor, judgePath)
+                if (path !== folderPath) {
+                    let judgePath = path.substring(0, path.length - splitor.length)
+                    appendMiddlePath = assembleFilePath(urlSplitor, judgePath)
+                }
                 let nowFile = `${virtualStaticUrl}${appendMiddlePath}${itm}`
                 let objStr = `<a href="${nowFile}">${itm}</a><br/>`
                 filesList.content += objStr;
@@ -184,17 +187,28 @@ app.post("/run", (req, res) => {
         return
     }
     let commands = req.body["commands"]
+    // 禁止的命令
+    if (commands.includes("rm ") || commands.includes("shutdown") || commands.includes("reboot")) {
+        res.status(200)
+        res.send(`命令不允许`)
+        return
+    }
     // console.log(commands)
-    exec(commands, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`执行错误: ${error}`);
-            res.status(500)
-            res.send(`ERR,${error},${stderr}`)
-        } else {
-            res.status(200)
-            res.send(`${stdout}`)
-        }
-    });
+    try {
+        exec(commands, (error, stdout, stderr) => {
+            if (error) {
+                // console.error(`执行错误: ${error}`);
+                res.status(500)
+                res.send(`ERR,${error},${stderr}`)
+            } else {
+                res.status(200)
+                res.send(`${stdout}`)
+            }
+        });
+    } catch (err) {
+        res.status(500)
+        res.send(`${err}`)
+    }
 })
 
 // API: login
