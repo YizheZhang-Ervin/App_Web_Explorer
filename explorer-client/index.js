@@ -38,15 +38,21 @@ const app = createApp({
                 this.generateMsg("请先登录")
                 return;
             }
+            // 判空
+            if (this.keyword == '') {
+                this.keyword = undefined
+            }
             axiosInstance.get(`/gsearch?keyword=${this.keyword}`)
                 .then((res) => {
                     // 返回结果
                     // console.log(res);
-                    this.searchResult = res.data
+                    if (res.status == 200) {
+                        this.searchResult = res.data
+                    }
                 }).catch((err) => {
                     // 返回结果
-                    this.searchResult = undefined
-                    this.generateMsg(err)
+                    this.searchResult = err.response.data
+                    // this.generateMsg(err)
                 })
         },
         // 文件浏览器
@@ -199,6 +205,10 @@ const app = createApp({
                     '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
                     '</div>'
                 ].join('')
+                for (let childNode of alertPlaceholder.childNodes) {
+                    // console.log(childNode)
+                    alertPlaceholder.removeChild(childNode)
+                }
                 alertPlaceholder.append(wrapper)
             }
             alert(msg, 'success')

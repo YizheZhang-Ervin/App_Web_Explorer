@@ -27,7 +27,7 @@
 }
 
 .transparent-bg {
-    background-color: transparent !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .font-gold {
@@ -45,6 +45,13 @@
 .scroll-h50 {
     max-height: 50vh;
     overflow-y: auto;
+}
+
+.overflow-y {
+    overflow-y: auto;
+    min-height: 0px;
+    padding: 0;
+    max-height: 200px;
 }
 
 .nav-tabs .nav-item.show .nav-link,

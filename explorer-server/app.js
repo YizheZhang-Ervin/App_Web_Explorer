@@ -5,8 +5,8 @@ const multer = require('multer')
 const { exec } = require("child_process");
 let fs = require('fs');
 let path = require("path")
-let config = require("./config/config-test.json")
-// let config = require("./config/config-prod.json")
+// let config = require("./config/config-test.json")
+let config = require("./config/config-prod.json")
 
 // read config
 let folderPath = config["folderPath"]
@@ -61,7 +61,7 @@ let verifyToken = (req) => {
     if (!token) {
         return false
     }
-    let tokenStr = atob(token)
+    let tokenStr = Buffer.from(token, 'base64').toString()
     if (tokenStr) {
         let tokenList = tokenStr.split("#")
         let userJson = require(userJsonPath)
@@ -75,20 +75,22 @@ let verifyToken = (req) => {
 }
 
 // TOOL: read folder files
-let readFileList = (path, filesList) => {
+let readFileList = (path, filesList, target = null) => {
     var files = fs.readdirSync(path);
     files.forEach((itm, index) => {
         var stat = fs.statSync(path + itm);
         if (stat.isDirectory()) {
             //递归读取文件
-            readFileList(path + itm + splitor, filesList)
+            readFileList(path + itm + splitor, filesList, target)
         } else {
-            // 组装文件路径
-            let judgePath = path.substring(0, path.length - splitor.length)
-            let appendMiddlePath = assembleFilePath(urlSplitor, judgePath)
-            let nowFile = `${virtualStaticUrl}${appendMiddlePath}${itm}`
-            let objStr = `<a href="${nowFile}">${itm}</a><br/>`
-            filesList.content += objStr;
+            if (target == null || itm.includes(target)) {
+                // 组装文件路径
+                let judgePath = path.substring(0, path.length - splitor.length)
+                let appendMiddlePath = assembleFilePath(urlSplitor, judgePath)
+                let nowFile = `${virtualStaticUrl}${appendMiddlePath}${itm}`
+                let objStr = `<a href="${nowFile}">${itm}</a><br/>`
+                filesList.content += objStr;
+            }
         }
     })
 }
@@ -130,6 +132,7 @@ app.get('/file', (req, res) => {
     }
     let filesList = { content: "" }
     readFileList(folderPath, filesList)
+    res.status(200)
     res.send(filesList.content)
 })
 
@@ -161,8 +164,15 @@ app.get("/gsearch", (req, res) => {
     }
     let keyword = req.query.keyword
     // console.log(keyword)
-    res.status(200)
-    res.send(`OK,${keyword}`)
+    let filesList = { content: "" }
+    readFileList(folderPath, filesList, keyword)
+    if (filesList.content) {
+        res.status(200)
+        res.send(filesList.content)
+    } else {
+        res.status(500)
+        res.send("查无结果")
+    }
 })
 
 // API: cmd api
@@ -195,7 +205,7 @@ app.post("/login", (req, res) => {
     let testPwd = userJson[username]
     if (testPwd && testPwd === pwd) {
         // 组装token
-        let token = btoa(username + "#" + pwd)
+        let token = Buffer.from(username + "#" + pwd).toString('base64')
         res.status(200)
         res.send(token)
     } else {

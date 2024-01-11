@@ -102,8 +102,9 @@
                                         @click="globalSearch">Search</button>
                                 </div>
                                 <br />
-                                <textarea readonly class="form-control transparent-bg border-none font-gold"
-                                    v-text="searchResult"></textarea>
+                                <div class="form-control transparent-bg border-none font-gold overflow-y"
+                                    v-html="searchResult">
+                                </div>
                             </div>
                             <!-- 文件浏览器弹窗 -->
                             <div class="modal fade" id="n2" tabindex="-1" aria-labelledby="t2" aria-hidden="true">
