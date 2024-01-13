@@ -1,22 +1,30 @@
 # App_Web_Explorer
 
 ## Features
-```
-# 网页文件浏览器
-GET /file
+1. 网页文件浏览器
+- GET /file
 
-# 登录登出
-POST /login
+2. 登录登出
+- POST /login
 
-# 全局搜
-GET /gsearch
+3. 全局搜
+- GET /gsearch
 
-# 上传
-POST /upload
+4. 上传
+- POST /upload
 
-# 命令行运行
-POST /run
-```
+5. 命令行运行
+- POST /run
+
+6. 工具
+- 摄像头&截屏
+- 转盘
+- 汽车游戏
+- 时钟
+- 通知
+    - chrome://flags/#unsafely-treat-insecure-origin-as-secure
+    - 设置Insecure origins treated as secure
+为enabled，地址填127.0.0.1:3000
 
 ## Config Files
 ```

@@ -1,4 +1,7 @@
 const { createApp } = Vue
+import Media from "./media.js"
+import Carrace from "./carrace.js"
+import Wheel from "./wheel.js"
 
 const axiosInstance = axios.create()
 
@@ -16,10 +19,16 @@ const app = createApp({
             currentUser: undefined,
             showLogin: true,
             canRequest: false,
-            token: undefined
+            token: undefined,
+            showCarrace: false,
+            showWheel: false
         }
     },
     mounted() {
+        // title时钟
+        setInterval(() => {
+            this.checkVisibility();
+        }, 1000);
     },
     methods: {
         // 打开全局搜索
@@ -166,6 +175,8 @@ const app = createApp({
                         this.canRequest = true
                         this.token = res.data
                         axiosInstance.defaults.headers.common['Authorization'] = this.token;
+                        // 发送通知
+                        this.sendNotification(this.currentUser)
                     } else {
                         // 返回消息弹窗
                         this.generateMsg("登陆失败，账号或密码错误")
@@ -212,7 +223,42 @@ const app = createApp({
                 alertPlaceholder.append(wrapper)
             }
             alert(msg, 'success')
-        }
+        },
+        // title时钟，当页面挂在后台时播放
+        checkVisibility() {
+            let timer;
+            if (document.visibilityState != "visible") {
+                timer = setInterval(() => {
+                    let date = new Date(Date.now());
+                    document.title =
+                        "Explorer - " +
+                        date.getHours() +
+                        ":" +
+                        date.getMinutes() +
+                        ":" +
+                        date.getSeconds();
+                    if (document.visibilityState == "visible") {
+                        clearInterval(timer);
+                        document.title = "Explorer";
+                    }
+                }, 1000);
+            }
+        },
+        // 发送通知
+        sendNotification(user) {
+            var n = new Notification(`Hi ${user}`, {
+                body: `Welcome to Explorer!`,
+                tag: "backup",
+                requireInteraction: false,
+                data: {},
+            });
+            n.onclick = function () {
+                n.close();
+            };
+        },
     }
 })
+app.component("media", Media)
+app.component("carrace", Carrace)
+app.component("wheel", Wheel)
 app.mount('#app')

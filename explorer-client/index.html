@@ -4,6 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="./imgs/logo.png" type="image/png" />
         <title>Explorer</title>
         <!-- bootstrap -->
         <link href="./lib/bootstrap.min.css" rel="stylesheet">
@@ -87,6 +88,8 @@
                                     type="button" @click="openUploadFile">Upload</button>
                                 <button class="nav-link font-gold" id="t4" data-bs-toggle="modal" data-bs-target="#n4"
                                     type="button" @click="openRunCmd">Cmd</button>
+                                <button class="nav-link font-gold" id="t5" data-bs-toggle="tab" data-bs-target="#n5"
+                                    type="button" role="tab" aria-controls="n5" aria-selected="false">Tools</button>
                             </div>
                         </nav>
                         <!-- 每个导航栏菜单对应的内容 -->
@@ -177,11 +180,84 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 工具 -->
+                            <div class="tab-pane fade" id="n5" role="tabpanel" aria-labelledby="t5" tabindex="0">
+                                <br />
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                    <button class="btn btn-info" id="t5-1" data-bs-toggle="modal" data-bs-target="#n5-1"
+                                        type="button">Camera</button>
+                                    <button class="btn btn-success" id="t5-2" data-bs-toggle="modal"
+                                        data-bs-target="#n5-2" type="button" @click="showCarrace=true">Car Race</button>
+                                    <button class="btn btn-warning" id="t5-3" data-bs-toggle="modal"
+                                        data-bs-target="#n5-3" type="button" @click="showWheel=true">Wheel</button>
+                                </div>
+                                <!-- car race弹窗 -->
+                                <div class="modal fade" id="n5-2" aria-hidden="true" aria-labelledby="t5-2"
+                                    tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="t5-2">Car Race</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <carrace v-if="showCarrace"></carrace>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 相机弹窗 -->
+                                <div class="modal fade" id="n5-1" aria-hidden="true" aria-labelledby="t5-1"
+                                    tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="t5-1">工具</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <media></media>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- wheel弹窗 -->
+                                <div class="modal fade" id="n5-3" aria-hidden="true" aria-labelledby="t5-3"
+                                    tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="t5-3">Wheel</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <wheel v-if="showWheel"></wheel>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
                     </div>
                 </div>
+
                 <!-- 页脚 -->
                 <div class="row h5v">
                     <div class="col">
@@ -192,6 +268,7 @@
                     <div class="col">
                     </div>
                 </div>
+
             </div>
         </div>
         <!-- vue -->
@@ -201,6 +278,8 @@
         <!-- bootstrap -->
         <script src="./lib/bootstrap.min.js"></script>
         <script src="./lib/popper.min.js"></script>
+        <!-- lucky-canvas -->
+        <script type="text/javascript" src="./lib/lucky-canvas.js"></script>
         <!-- app -->
         <script src="./index.js" type="module" async></script>
     </body>
