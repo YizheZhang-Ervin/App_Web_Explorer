@@ -31,3 +31,27 @@
 user-template.json
 config-template.json
 ```
+
+## https
+```
+# 生成服务器端私钥
+openssl genrsa -out server.key 1024 
+
+# 生成服务端公钥
+openssl rsa -in server.key -pubout -out server.pem
+
+# 生成CA私钥
+openssl genrsa -out ca.key 1024
+
+# 生成csr文件
+openssl req -new -key ca.key -out ca.csr
+
+# 生成自签名证书
+openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+# 生成server.csr文件
+openssl req -new -key server.key -out server.csr
+
+# 生成带有ca签名的证书
+openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt
+```

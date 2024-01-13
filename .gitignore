@@ -108,3 +108,4 @@ dist
 explorer-server/config/config-test.json
 explorer-server/config/config-prod.json
 explorer-server/config/user.json
+explorer-server/keys/*

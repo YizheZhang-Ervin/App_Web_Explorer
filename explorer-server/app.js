@@ -5,6 +5,7 @@ const multer = require('multer')
 const { exec } = require("child_process");
 let fs = require('fs');
 let path = require("path")
+let https = require('https')
 // let config = require("./config/config-test.json")
 let config = require("./config/config-prod.json")
 
@@ -17,6 +18,9 @@ let splitor = config["splitor"] || "/"
 let uploadPath = config["uploadPath"] || "uploads/"
 let urlSplitor = "/"
 let userJsonPath = "./config/user.json"
+let serverKeyPath = './keys/server.key'
+let serverCrtPath = './keys/server.crt'
+let useHttps = config["useHttps"] || "yes"
 
 // response
 app.use(bodyParser.json());
@@ -229,8 +233,20 @@ app.post("/login", (req, res) => {
 })
 
 // web server
-let server = app.listen(port, address, () => {
-    let host = server.address().address
-    let port = server.address().port
-    console.log("App Starts At: http://%s:%s", host, port)
-})
+if (useHttps === "yes") {
+    let httpsServer = https.createServer({
+        key: fs.readFileSync(serverKeyPath),
+        cert: fs.readFileSync(serverCrtPath)
+    }, app);
+    let server = httpsServer.listen(port, address, () => {
+        let host = server.address().address
+        let port = server.address().port
+        console.log("App Starts At: https://%s:%s", host, port)
+    })
+} else {
+    let server = app.listen(port, address, () => {
+        let host = server.address().address
+        let port = server.address().port
+        console.log("App Starts At: http://%s:%s", host, port)
+    })
+}
