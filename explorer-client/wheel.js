@@ -4,7 +4,6 @@ export default {
     watch: {
     },
     mounted() {
-        this.init()
     },
     data() {
         return {
@@ -28,10 +27,12 @@ export default {
                 pointer: true,
                 fonts: [{ text: '开始', top: '-10px' }]
             }],
+            num: 8
         }
     },
     methods: {
         init() {
+            this.initNum()
             this.myLucky = new LuckyCanvas.LuckyWheel('#my-lucky', {
                 width: this.width,
                 height: this.height,
@@ -52,11 +53,28 @@ export default {
                 // console.log(randomInt)
                 this.myLucky.stop(randomInt)
             }, 3000)
+        },
+        initNum() {
+            this.prizes = []
+            for (let i = 0; i < this.num; i++) {
+                let tmp = {}
+                if (i % 2 == 0) {
+                    tmp = { background: '#e9e8fe', fonts: [{ text: i }] }
+                } else {
+                    tmp = { background: '#b8c5f2', fonts: [{ text: i }] }
+                }
+                this.prizes.push(tmp)
+            }
         }
     },
     template:
         `
-    <section>
+    <section class="flex-center">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="num">选项数</span>
+            <input type="text" class="form-control" aria-describedby="num" v-model="num">
+            <button type="button" class="btn btn-primary" @click="init">Begin</button>
+        </div>
         <div id="my-lucky"></div>
     </section>
     `

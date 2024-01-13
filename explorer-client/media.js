@@ -16,6 +16,14 @@ export default {
                 video: { width: 300, height: 300 },
                 audio: true
             };
+            if (!navigator) {
+                alert("No navigator")
+                return
+            }
+            if (!navigator.mediaDevices) {
+                alert("No mediaDevices")
+                return
+            }
             if (navigator.mediaDevices.getUserMedia(constraints) == 'undefined') {
                 alert("can't use media devices!");
             } else {
