@@ -108,26 +108,28 @@ const app = createApp({
                 this.generateMsg("请先登录")
                 return;
             }
-            let formObj = new FormData()
-            formObj.append("file", this.fileObj[0])
-            axiosInstance.post(`/upload`, formObj)
-                .then((res) => {
-                    // 返回结果
-                    // console.log(res);
-                    if (res.status === 200) {
+            for (let file of this.fileObj) {
+                let formObj = new FormData()
+                formObj.append("file", file)
+                axiosInstance.post(`/upload`, formObj)
+                    .then((res) => {
+                        // 返回结果
+                        // console.log(res);
+                        if (res.status === 200) {
+                            // 返回消息弹窗
+                            this.generateMsg("上传成功")
+                        } else {
+                            // 返回消息弹窗
+                            this.generateMsg("上传失败")
+                        }
+                    }).catch((err) => {
                         // 返回消息弹窗
-                        this.generateMsg("上传成功")
-                    } else {
-                        // 返回消息弹窗
-                        this.generateMsg("上传失败")
-                    }
-                }).catch((err) => {
-                    // 返回消息弹窗
-                    this.generateMsg(err)
-                }).finally(
-                    // 清理上传框
-                    document.getElementById("inputFile").value = ""
-                )
+                        this.generateMsg(err)
+                    }).finally(
+                        // 清理上传框
+                        document.getElementById("inputFile").value = ""
+                    )
+            }
         },
         // 打开命令行
         openRunCmd() {

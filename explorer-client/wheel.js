@@ -27,11 +27,16 @@ export default {
                 pointer: true,
                 fonts: [{ text: '开始', top: '-10px' }]
             }],
-            num: 8
+            num: 8,
+            result: undefined
         }
     },
     methods: {
         init() {
+            if (this.myLucky) {
+                alert("请刷新页面后重新初始化")
+                return
+            }
             this.initNum()
             this.myLucky = new LuckyCanvas.LuckyWheel('#my-lucky', {
                 width: this.width,
@@ -44,14 +49,17 @@ export default {
         },
         start() {
             // 开始游戏
+            this.result = undefined
             this.myLucky.play()
             // 使用定时器模拟接口
             setTimeout(() => {
                 // 结束游戏
                 // console.log(myLucky.prizes.length)
                 let randomInt = Math.floor(Math.random() * this.myLucky.prizes.length + 0)
-                // console.log(randomInt)
                 this.myLucky.stop(randomInt)
+                setTimeout(() => {
+                    this.result = `取得的号码是：${randomInt}`
+                }, 3100)
             }, 3000)
         },
         initNum() {
@@ -75,6 +83,8 @@ export default {
             <input type="text" class="form-control" aria-describedby="num" v-model="num">
             <button type="button" class="btn btn-primary" @click="init">Begin</button>
         </div>
+        <textarea v-model="result" readonly class="form-control resultColor border-none" rows="1"></textarea>
+        <br/>
         <div id="my-lucky"></div>
     </section>
     `
