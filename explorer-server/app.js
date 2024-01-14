@@ -129,36 +129,50 @@ let assembleFilePath = (nowMiddlePath, path) => {
     }
 }
 
+// TOOL: response JSON
+let assembleResJson = (flag, data, msg) => {
+    return {
+        code: flag ? "OK" : "ERR",
+        data: data,
+        msg: msg
+    }
+}
+
 // API: basic route
 app.get('/file', (req, res) => {
     // 验证请求头
     if (!verifyToken(req)) {
-        res.status(500)
-        res.send(`ERR,验证身份失败`)
+        res.status(200)
+        let resObj = assembleResJson(false, null, `ERR: 验证身份失败`)
+        res.send(resObj)
         return
     }
     let filesList = { content: "" }
     readFileList(folderPath, filesList)
     res.status(200)
-    res.send(filesList.content)
+    let resObj = assembleResJson(true, filesList.content, `OK`)
+    res.send(resObj)
 })
 
 // API: upload api
 app.post("/upload", upload.single("file"), (req, res) => {
     // 验证请求头
     if (!verifyToken(req)) {
-        res.status(500)
-        res.send(`ERR,验证身份失败`)
+        res.status(200)
+        let resObj = assembleResJson(false, null, `ERR: 验证身份失败`)
+        res.send(resObj)
         return
     }
     req.setEncoding('utf-8');
     const uploadedFile = req.file
     if (uploadedFile) {
         res.status(200)
-        res.send(`OK,${uploadedFile.originalname}`)
+        let resObj = assembleResJson(true, `OK,${uploadedFile.originalname}`, `OK`)
+        res.send(resObj)
     } else {
-        res.status(500)
-        res.send(`ERR,上传失败`)
+        res.status(200)
+        let resObj = assembleResJson(false, null, `ERR: 上传失败,未获取到上传文件`)
+        res.send(resObj)
     }
 })
 
@@ -166,8 +180,9 @@ app.post("/upload", upload.single("file"), (req, res) => {
 app.get("/gsearch", (req, res) => {
     // 验证请求头
     if (!verifyToken(req)) {
-        res.status(500)
-        res.send(`ERR,验证身份失败`)
+        res.status(200)
+        let resObj = assembleResJson(false, null, `ERR: 验证身份失败`)
+        res.send(resObj)
         return
     }
     let keyword = req.query.keyword
@@ -176,10 +191,12 @@ app.get("/gsearch", (req, res) => {
     readFileList(folderPath, filesList, keyword)
     if (filesList.content) {
         res.status(200)
-        res.send(filesList.content)
+        let resObj = assembleResJson(true, filesList.content, `OK`)
+        res.send(resObj)
     } else {
-        res.status(500)
-        res.send("查无结果")
+        res.status(200)
+        let resObj = assembleResJson(false, null, "查无结果")
+        res.send(resObj)
     }
 })
 
@@ -187,15 +204,17 @@ app.get("/gsearch", (req, res) => {
 app.post("/run", (req, res) => {
     // 验证请求头
     if (!verifyToken(req)) {
-        res.status(500)
-        res.send(`ERR,验证身份失败`)
+        res.status(200)
+        let resObj = assembleResJson(false, null, `ERR: 验证身份失败`)
+        res.send(resObj)
         return
     }
     let commands = req.body["commands"]
     // 禁止的命令
     if (commands.includes("rm ") || commands.includes("shutdown") || commands.includes("reboot")) {
         res.status(200)
-        res.send(`命令不允许`)
+        let resObj = assembleResJson(false, null, "ERR: 命令不允许")
+        res.send(resObj)
         return
     }
     // console.log(commands)
@@ -203,16 +222,19 @@ app.post("/run", (req, res) => {
         exec(commands, (error, stdout, stderr) => {
             if (error) {
                 // console.error(`执行错误: ${error}`);
-                res.status(500)
-                res.send(`ERR,${error},${stderr}`)
+                res.status(200)
+                let resObj = assembleResJson(false, null, `ERR: ${error},${stderr}`)
+                res.send(resObj)
             } else {
                 res.status(200)
-                res.send(`${stdout}`)
+                let resObj = assembleResJson(true, `${stdout}`, `OK`)
+                res.send(resObj)
             }
         });
     } catch (err) {
-        res.status(500)
-        res.send(`${err}`)
+        res.status(200)
+        let resObj = assembleResJson(false, null, `ERR: ${err}`)
+        res.send(resObj)
     }
 })
 
@@ -226,10 +248,12 @@ app.post("/login", (req, res) => {
         // 组装token
         let token = Buffer.from(username + "#" + pwd).toString('base64')
         res.status(200)
-        res.send(token)
+        let resObj = assembleResJson(true, `${token}`, `OK`)
+        res.send(resObj)
     } else {
-        res.status(500)
-        res.send("Login Failed")
+        res.status(200)
+        let resObj = assembleResJson(false, null, "ERR: 账号or密码不正确")
+        res.send(resObj)
     }
 })
 

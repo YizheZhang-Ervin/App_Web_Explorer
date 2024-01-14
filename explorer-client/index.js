@@ -66,12 +66,14 @@ const app = createApp({
                 .then((res) => {
                     // 返回结果
                     // console.log(res);
-                    if (res.status == 200) {
-                        this.searchResult = res.data
+                    if (res.data.code === "OK") {
+                        this.searchResult = res.data.data
+                    } else {
+                        this.searchResult = res.data.msg
                     }
                 }).catch((err) => {
                     // 返回结果
-                    this.searchResult = err.response.data
+                    this.searchResult = err
                     // this.generateMsg(err)
                 })
         },
@@ -87,8 +89,12 @@ const app = createApp({
             axiosInstance.get(`/file`)
                 .then((res) => {
                     // 返回结果
-                    // console.log(res);
-                    this.fileResult = res.data
+                    if (res.data.code === "OK") {
+                        this.fileResult = res.data.data
+                    } else {
+                        this.fileResult = undefined
+                        this.generateMsg(res.data.msg)
+                    }
                 }).catch((err) => {
                     // 返回结果
                     this.fileResult = undefined
@@ -123,12 +129,12 @@ const app = createApp({
                 axiosInstance.post(`/upload`, formObj).then((res) => {
                     // 返回结果
                     // console.log(res);
-                    if (res.status === 200) {
+                    if (res.data.code === "OK") {
                         // 返回消息弹窗
                         this.generateMsg("上传成功")
                     } else {
                         // 返回消息弹窗
-                        this.generateMsg("上传失败")
+                        this.generateMsg(res.data.msg)
                     }
                 }).catch((err) => {
                     // 返回消息弹窗
@@ -161,12 +167,12 @@ const app = createApp({
                 .then((res) => {
                     // 返回结果
                     // console.log(res);
-                    if (res.status === 200) {
+                    if (res.data.code === "OK") {
                         // 返回结果
-                        this.cmdResult = res.data
+                        this.cmdResult = res.data.data
                     } else {
                         // 返回消息弹窗
-                        this.generateMsg("执行失败")
+                        this.generateMsg(res.data.msg)
                     }
                 }).catch((err) => {
                     // 返回消息弹窗
@@ -185,18 +191,18 @@ const app = createApp({
                 .then((res) => {
                     // 返回结果
                     // console.log(res);
-                    if (res.status === 200) {
+                    if (res.data.code === "OK") {
                         // 返回结果
                         this.currentUser = this.username
                         this.showLogin = false
                         this.canRequest = true
-                        this.token = res.data
+                        this.token = res.data.data
                         axiosInstance.defaults.headers.common['Authorization'] = this.token;
                         // 发送通知
                         this.sendNotification(this.currentUser)
                     } else {
                         // 返回消息弹窗
-                        this.generateMsg("登陆失败，账号或密码错误")
+                        this.generateMsg(res.data.msg)
                     }
                 }).catch((err) => {
                     // 返回消息弹窗
