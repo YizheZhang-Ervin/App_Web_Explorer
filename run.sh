@@ -1,2 +1,1 @@
-docker rm -f explorer
-docker run -d -p 3000:3000 --restart=always --name explorer explorer
+docker run -d -p 3000:3000 -v /home/share/upload:/home/share/upload --restart=always --name explorer explorer
