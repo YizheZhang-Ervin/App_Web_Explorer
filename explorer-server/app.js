@@ -151,6 +151,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
         res.send(`ERR,验证身份失败`)
         return
     }
+    req.setEncoding('utf-8');
     const uploadedFile = req.file
     if (uploadedFile) {
         res.status(200)

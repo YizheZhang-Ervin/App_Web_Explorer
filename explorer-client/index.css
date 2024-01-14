@@ -2,11 +2,6 @@
     margin: 0;
 }
 
-.whole {
-    background-image: url("./imgs/bg.jpg");
-    background-size: cover;
-}
-
 .h5v {
     height: 6vh;
     background-color: rgba(0, 0, 0, 0.6);

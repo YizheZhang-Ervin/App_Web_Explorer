@@ -1,7 +1,7 @@
 const { createApp } = Vue
-import Media from "./media.js"
-import Carrace from "./carrace.js"
-import Wheel from "./wheel.js"
+import Media from "./components/media.js"
+import Carrace from "./components/carrace.js"
+import Wheel from "./components/wheel.js"
 
 const axiosInstance = axios.create()
 
@@ -24,16 +24,22 @@ const app = createApp({
             showWheel: false,
             // currentEle: undefined,
             mouseX: undefined,
-            mouseY: undefined
+            mouseY: undefined,
+            randomBg: {
+                backgroundImage: 'url(./imgs/bg1.jpg)',
+                backgroundSize: 'cover'
+            }
         }
     },
     mounted() {
         // title时钟
         setInterval(() => {
-            this.checkVisibility();
+            this.checkVisibility()
         }, 1000);
         // 鼠标移动
         document.onmousemove = this.mouseMove;
+        // 设置背景图
+        this.changeBg()
     },
     methods: {
         // 打开全局搜索
@@ -299,6 +305,15 @@ const app = createApp({
                 y: ev.clientY + document.body.scrollTop - document.body.clientTop,
             };
         },
+        // 切换壁纸
+        changeBg() {
+            // 随机1~4
+            let num = Math.floor(Math.random() * (5 - 1)) + 1;
+            this.randomBg = {
+                backgroundImage: `url(./imgs/bg${num}.jpg)`,
+                backgroundSize: 'cover'
+            }
+        }
     }
 })
 app.component("media", Media)

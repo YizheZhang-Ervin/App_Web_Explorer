@@ -13,263 +13,267 @@
     </head>
 
     <body>
-        <div id="app" class="whole">
-            <div id="myAlert"></div>
-            <div class="container-fluid text-center">
-                <!-- 页头 -->
-                <div class="row h5v">
-                    <div class="col mg-auto">
-                        Explorer Search Engine ({{mouseX}},{{mouseY}})
-                    </div>
-                    <div class="col">
-                    </div>
-                    <div class="col mg-auto">
-                        <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#login" @click="openLogin" v-if="showLogin">
-                            Login
-                        </button>
-                        <section v-else>
-                            <span>Hi,{{currentUser}}</span>&nbsp;
-                            <button type="button" class="btn btn-outline-info btn-sm" @click="logout">
-                                Logout
+        <div id="app">
+            <section v-model:style="randomBg">
+                <div id="myAlert"></div>
+                <div class="container-fluid text-center">
+                    <!-- 页头 -->
+                    <div class="row h5v">
+                        <div class="col mg-auto">
+                            Explorer Search Engine ({{mouseX}},{{mouseY}})
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col mg-auto">
+                            <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#login" @click="openLogin" v-if="showLogin">
+                                Login
                             </button>
-                        </section>
-                        <!-- 登录弹窗 -->
-                        <div class="modal fade" id="login" tabindex="-1" aria-labelledby="loginLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5 font-black" id="loginLabel">Login</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- 表单 -->
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text" id="username">Username</span>
-                                            <input type="text" class="form-control" aria-describedby="username"
-                                                v-model="username">
-                                        </div>
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text" id="pwd">Password</span>
-                                            <input type="password" class="form-control" aria-describedby="pwd"
-                                                v-model="pwd">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" @click="login"
-                                            data-bs-dismiss="modal">Login</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 主体 -->
-                <div class="row h90">
-                    <div class="col">
-                    </div>
-                    <!-- 中间 -->
-                    <div class="col-6 mg-auto">
-                        <h1 class="font-gold display-1">Explorer</h1>
-                        <br />
-                        <!-- 导航栏 -->
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <button class="nav-link active font-gold" id="t1" data-bs-toggle="tab"
-                                    data-bs-target="#n1" type="button" role="tab" aria-controls="n1"
-                                    aria-selected="true" @click="openSearch">Search</button>
-                                <button class="nav-link font-gold" id="t2" data-bs-toggle="modal" data-bs-target="#n2"
-                                    type="button" @click="fileBrowser">File</button>
-                                <button class="nav-link font-gold" id="t3" data-bs-toggle="modal" data-bs-target="#n3"
-                                    type="button" @click="openUploadFile">Upload</button>
-                                <button class="nav-link font-gold" id="t4" data-bs-toggle="modal" data-bs-target="#n4"
-                                    type="button" @click="openRunCmd">Cmd</button>
-                                <button class="nav-link font-gold" id="t5" data-bs-toggle="tab" data-bs-target="#n5"
-                                    type="button" role="tab" aria-controls="n5" aria-selected="false">Tools</button>
-                            </div>
-                        </nav>
-                        <!-- 每个导航栏菜单对应的内容 -->
-                        <div class="tab-content" id="nav-tabContent">
-                            <!-- 全局搜索 -->
-                            <div class="tab-pane fade show active" id="n1" role="tabpanel" aria-labelledby="t1"
-                                tabindex="0">
-                                <br />
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Please input Keyword..."
-                                        aria-label="Keyword" aria-describedby="button-addon2" v-model="keyword">
-                                    <button class="btn btn-success" type="button" id="button-addon2"
-                                        @click="globalSearch">Search</button>
-                                </div>
-                                <br />
-                                <div class="form-control transparent-bg-search border-none font-gold overflow-y"
-                                    v-html="searchResult">
-                                </div>
-                            </div>
-                            <!-- 文件浏览器弹窗 -->
-                            <div class="modal fade" id="n2" tabindex="-1" aria-labelledby="t2" aria-hidden="true">
+                            <section v-else>
+                                <span>Hi,{{currentUser}}</span>&nbsp;
+                                <button type="button" class="btn btn-outline-info btn-sm" @click="logout">
+                                    Logout
+                                </button>
+                            </section>
+                            <!-- 登录弹窗 -->
+                            <div class="modal fade" id="login" tabindex="-1" aria-labelledby="loginLabel"
+                                aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="t2">文件浏览器</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body scroll-h50">
-                                            <div v-html="fileResult"></div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 文件上传弹窗 -->
-                            <div class="modal fade" id="n3" aria-hidden="true" aria-labelledby="t3" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="t3">文件上传</h1>
+                                            <h1 class="modal-title fs-5 font-black" id="loginLabel">Login</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="input-group">
-                                                <input type="file" class="form-control" id="inputFile"
-                                                    aria-describedby="inputGroupFileAddon04" aria-label="Upload"
-                                                    multiple @change="handleFileUpload">
-                                                <button class="btn btn-outline-secondary" type="button"
-                                                    id="inputGroupFileAddon04" @click="uploadFile"
-                                                    data-bs-dismiss="modal">Upload</button>
+                                            <!-- 表单 -->
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="username">Username</span>
+                                                <input type="text" class="form-control" aria-describedby="username"
+                                                    v-model="username">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text" id="pwd">Password</span>
+                                                <input type="password" class="form-control" aria-describedby="pwd"
+                                                    v-model="pwd">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 命令行弹窗 -->
-                            <div class="modal fade" id="n4" aria-hidden="true" aria-labelledby="t4" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="t4">命令行</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="input-group">
-                                                <span class="input-group-text">命令</span>
-                                                <textarea class="form-control" v-model="commands"></textarea>
-                                            </div>
-                                            <br />
-                                            <textarea readonly class="form-control resultColor border-none h30"
-                                                v-text="cmdResult"></textarea>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" @click="runCmd">Run</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 工具 -->
-                            <div class="tab-pane fade" id="n5" role="tabpanel" aria-labelledby="t5" tabindex="0">
-                                <br />
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                    <button class="btn btn-info" id="t5-1" data-bs-toggle="modal" data-bs-target="#n5-1"
-                                        type="button">Camera</button>
-                                    <button class="btn btn-success" id="t5-2" data-bs-toggle="modal"
-                                        data-bs-target="#n5-2" type="button" @click="showCarrace=true">Car Race</button>
-                                    <button class="btn btn-warning" id="t5-3" data-bs-toggle="modal"
-                                        data-bs-target="#n5-3" type="button" @click="showWheel=true">Wheel</button>
-                                </div>
-                                <!-- car race弹窗 -->
-                                <div class="modal fade" id="n5-2" aria-hidden="true" aria-labelledby="t5-2"
-                                    tabindex="-1">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="t5-2">Car Race</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <carrace v-if="showCarrace"></carrace>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 相机弹窗 -->
-                                <div class="modal fade" id="n5-1" aria-hidden="true" aria-labelledby="t5-1"
-                                    tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="t5-1">工具</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <media></media>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- wheel弹窗 -->
-                                <div class="modal fade" id="n5-3" aria-hidden="true" aria-labelledby="t5-3"
-                                    tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="t5-3">Wheel</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <wheel v-if="showWheel"></wheel>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
+                                            <button type="button" class="btn btn-primary" @click="login"
+                                                data-bs-dismiss="modal">Login</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col">
+                    <!-- 主体 -->
+                    <div class="row h90">
+                        <div class="col">
+                        </div>
+                        <!-- 中间 -->
+                        <div class="col-6 mg-auto">
+                            <h1 class="font-gold display-1" @click="changeBg">Explorer</h1>
+                            <br />
+                            <!-- 导航栏 -->
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <button class="nav-link active font-gold" id="t1" data-bs-toggle="tab"
+                                        data-bs-target="#n1" type="button" role="tab" aria-controls="n1"
+                                        aria-selected="true" @click="openSearch">Search</button>
+                                    <button class="nav-link font-gold" id="t2" data-bs-toggle="modal"
+                                        data-bs-target="#n2" type="button" @click="fileBrowser">File</button>
+                                    <button class="nav-link font-gold" id="t3" data-bs-toggle="modal"
+                                        data-bs-target="#n3" type="button" @click="openUploadFile">Upload</button>
+                                    <button class="nav-link font-gold" id="t4" data-bs-toggle="modal"
+                                        data-bs-target="#n4" type="button" @click="openRunCmd">Cmd</button>
+                                    <button class="nav-link font-gold" id="t5" data-bs-toggle="tab" data-bs-target="#n5"
+                                        type="button" role="tab" aria-controls="n5" aria-selected="false">Tools</button>
+                                </div>
+                            </nav>
+                            <!-- 每个导航栏菜单对应的内容 -->
+                            <div class="tab-content" id="nav-tabContent">
+                                <!-- 全局搜索 -->
+                                <div class="tab-pane fade show active" id="n1" role="tabpanel" aria-labelledby="t1"
+                                    tabindex="0">
+                                    <br />
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Please input Keyword..."
+                                            aria-label="Keyword" aria-describedby="button-addon2" v-model="keyword">
+                                        <button class="btn btn-success" type="button" id="button-addon2"
+                                            @click="globalSearch">Search</button>
+                                    </div>
+                                    <br />
+                                    <div class="form-control transparent-bg-search border-none font-gold overflow-y"
+                                        v-html="searchResult">
+                                    </div>
+                                </div>
+                                <!-- 文件浏览器弹窗 -->
+                                <div class="modal fade" id="n2" tabindex="-1" aria-labelledby="t2" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="t2">文件浏览器</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body scroll-h50">
+                                                <div v-html="fileResult"></div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 文件上传弹窗 -->
+                                <div class="modal fade" id="n3" aria-hidden="true" aria-labelledby="t3" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="t3">文件上传</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group">
+                                                    <input type="file" class="form-control" id="inputFile"
+                                                        aria-describedby="inputGroupFileAddon04" aria-label="Upload"
+                                                        multiple @change="handleFileUpload">
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="inputGroupFileAddon04" @click="uploadFile"
+                                                        data-bs-dismiss="modal">Upload</button>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 命令行弹窗 -->
+                                <div class="modal fade" id="n4" aria-hidden="true" aria-labelledby="t4" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="t4">命令行</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">命令</span>
+                                                    <textarea class="form-control" v-model="commands"></textarea>
+                                                </div>
+                                                <br />
+                                                <textarea readonly class="form-control resultColor border-none h30"
+                                                    v-text="cmdResult"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    @click="runCmd">Run</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 工具 -->
+                                <div class="tab-pane fade" id="n5" role="tabpanel" aria-labelledby="t5" tabindex="0">
+                                    <br />
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                        <button class="btn btn-info" id="t5-1" data-bs-toggle="modal"
+                                            data-bs-target="#n5-1" type="button">Camera</button>
+                                        <button class="btn btn-success" id="t5-2" data-bs-toggle="modal"
+                                            data-bs-target="#n5-2" type="button" @click="showCarrace=true">Car
+                                            Race</button>
+                                        <button class="btn btn-warning" id="t5-3" data-bs-toggle="modal"
+                                            data-bs-target="#n5-3" type="button" @click="showWheel=true">Wheel</button>
+                                    </div>
+                                    <!-- car race弹窗 -->
+                                    <div class="modal fade" id="n5-2" aria-hidden="true" aria-labelledby="t5-2"
+                                        tabindex="-1">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="t5-2">Car Race</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <carrace v-if="showCarrace"></carrace>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 相机弹窗 -->
+                                    <div class="modal fade" id="n5-1" aria-hidden="true" aria-labelledby="t5-1"
+                                        tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="t5-1">工具</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <media></media>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- wheel弹窗 -->
+                                    <div class="modal fade" id="n5-3" aria-hidden="true" aria-labelledby="t5-3"
+                                        tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="t5-3">Wheel</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <wheel v-if="showWheel"></wheel>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                        </div>
                     </div>
-                </div>
 
-                <!-- 页脚 -->
-                <div class="row h5v">
-                    <div class="col">
+                    <!-- 页脚 -->
+                    <div class="row h5v">
+                        <div class="col">
+                        </div>
+                        <div class="col mg-auto">
+                            Design By EZ @2024
+                        </div>
+                        <div class="col">
+                        </div>
                     </div>
-                    <div class="col mg-auto">
-                        Design By EZ @2024
-                    </div>
-                    <div class="col">
-                    </div>
-                </div>
 
-            </div>
+                </div>
+            </section>
         </div>
         <!-- vue -->
         <script src="./lib/vue.global.js"></script>
