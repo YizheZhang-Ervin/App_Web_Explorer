@@ -21,7 +21,10 @@ const app = createApp({
             canRequest: false,
             token: undefined,
             showCarrace: false,
-            showWheel: false
+            showWheel: false,
+            // currentEle: undefined,
+            mouseX: undefined,
+            mouseY: undefined
         }
     },
     mounted() {
@@ -29,6 +32,8 @@ const app = createApp({
         setInterval(() => {
             this.checkVisibility();
         }, 1000);
+        // 鼠标移动
+        document.onmousemove = this.mouseMove;
     },
     methods: {
         // 打开全局搜索
@@ -246,14 +251,46 @@ const app = createApp({
         },
         // 发送通知
         sendNotification(user) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                let latitude =
+                    position.coords.latitude > 0
+                        ? position.coords.latitude + " N"
+                        : position.coords.latitude + " S";
+                let longitude =
+                    position.coords.longitude > 0
+                        ? position.coords.longitude + " E"
+                        : position.coords.longitude + " W";
+                console.log(`你的地理位置是：${latitude},${longitude}`)
+            }, (err) => { console.log(err) })
             var n = new Notification(`Hi ${user}`, {
                 body: `Welcome to Explorer!`,
                 tag: "backup",
                 requireInteraction: false,
                 data: {},
             });
-            n.onclick = function () {
+            n.onclick = () => {
                 n.close();
+            };
+        },
+        // 获取鼠标位置
+        mouseMove(ev) {
+            ev = ev || window.event;
+            var mousePos = this.mouseCoords(ev);
+            //获取当前的x,y坐标
+            this.mouseX = mousePos.x;
+            this.mouseY = mousePos.y;
+            // 获取当前位置的元素
+            // let ele = document.elementFromPoint(this.mouseX, this.mouseY);
+            // this.currentEle = ele;
+        },
+        mouseCoords(ev) {
+            //鼠标移动的位置
+            if (ev.pageX || ev.pageY) {
+                return { x: ev.pageX, y: ev.pageY };
+            }
+            return {
+                x: ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+                y: ev.clientY + document.body.scrollTop - document.body.clientTop,
             };
         },
     }

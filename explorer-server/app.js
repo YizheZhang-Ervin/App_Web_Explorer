@@ -18,8 +18,8 @@ let splitor = config["splitor"] || "/"
 let uploadPath = config["uploadPath"] || "uploads/"
 let urlSplitor = "/"
 let userJsonPath = "./config/user.json"
-let serverKeyPath = './keys/server.key'
-let serverCrtPath = './keys/server.crt'
+let serverKeyPath = config["serverKeyPath"] || './keys/server.key'
+let serverCrtPath = config["serverCrtPath"] || './keys/server.crt'
 let useHttps = config["useHttps"] || "yes"
 
 // response

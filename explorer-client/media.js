@@ -42,7 +42,25 @@ export default {
             let ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, 240, 240);
             // canvas.toDataURL("image/jpg")
-        }
+        },
+        getScreenShot() {
+            let video = document.getElementById("video001");
+            let constraints = {
+                video: { width: 300, height: 300 },
+                audio: true
+            };
+            if (navigator.mediaDevices.getDisplayMedia(constraints) == 'undefined') {
+                alert("can't use media devices!");
+            } else {
+                var promise = navigator.mediaDevices.getDisplayMedia(constraints);
+            }
+            promise.then((MediaStream) => {
+                video.srcObject = MediaStream;
+                video.play();
+            }).catch((PermissionDeniedError) => {
+                console.log(PermissionDeniedError);
+            })
+        },
     },
     template:
         `
@@ -52,6 +70,7 @@ export default {
     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
         <button @click="getCamera" type="button" class="btn btn-outline-primary">Open Camera</button >
         <button @click="takePhoto" type="button" class="btn btn-outline-success">Take Photo</button >
+        <button @click="getScreenShot" type="button" class="btn btn-outline-info">Open ScreenShot</button>
     </div>
 </section>
 `
