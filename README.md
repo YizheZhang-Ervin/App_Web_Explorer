@@ -25,6 +25,9 @@
 - 通知
     - chrome://flags/#unsafely-treat-insecure-origin-as-secure
     - 设置Insecure origins treated as secure为enabled，地址填127.0.0.1:3000
+- ocr
+    - langPath文件下载：https://github.com/naptha/tessdata/tree/gh-pages/4.0.0
+    - corePath文件下载：https://www.jsdelivr.com/package/npm/tesseract.js-core?tab=files
 
 7. 其他
 - webRTC 视频会议

@@ -2,6 +2,7 @@ const { createApp } = Vue
 import Media from "./components/media.js"
 import Carrace from "./components/carrace.js"
 import Wheel from "./components/wheel.js"
+import Ocr from "./components/ocr.js"
 
 const axiosInstance = axios.create()
 
@@ -28,7 +29,8 @@ const app = createApp({
             randomBg: {
                 backgroundImage: 'url(./imgs/bg1.jpg)',
                 backgroundSize: 'cover'
-            }
+            },
+            showOcr: false
         }
     },
     mounted() {
@@ -325,4 +327,5 @@ const app = createApp({
 app.component("media", Media)
 app.component("carrace", Carrace)
 app.component("wheel", Wheel)
+app.component("ocr", Ocr)
 app.mount('#app')
