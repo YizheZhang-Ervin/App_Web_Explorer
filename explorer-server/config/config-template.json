@@ -5,7 +5,7 @@
     "virtualStaticUrl": "static",
     "splitor": "/",
     "uploadPath": "/home/share/upload/",
-    "useHttps": true,
+    "useHttps": "yes",
     "serverKeyPath": "./keys/server.key",
     "serverCrtPath": "./keys/server.crt"
 }
